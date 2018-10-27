@@ -63,7 +63,7 @@ def main(input_file, window_size, time_out):
 
     print("[:] Processing %s URL(s)" % (page_amount))
 
-    driver = webdriver.Chrome(options=options)
+    driver = webdriver.Chrome(chrome_options=options)
     driver.set_page_load_timeout(time_out)
 
     for url in url_list:
