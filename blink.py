@@ -73,13 +73,31 @@ def process_urls(url_list, output_location, driver):
     driver.quit()
 
 
-def url_list_from_file(input_file):
+def url_list_from_file(input_file='example.txt'):
     """
     Read the specified file and return all lines inside the file, as a list of lines.
     :param input_file: path to an input file
-    :return: list of lines in the file, e.g. URLs separated by new-line
+    :return: list of lines in the file, e.g. URLs separated by new-line, comma or a mix of these
     """
-    return [line.rstrip() for line in open(input_ext_handler(input_file), 'r')]
+    urls = []
+
+    for line in open(input_ext_handler(input_file), 'r'):
+        if line.strip() == '':
+            continue
+
+        comma_sep_urls = line.split(',')
+
+        if isinstance(comma_sep_urls, list):
+            for url in comma_sep_urls:
+                url = url.split('/')[-1].strip()
+
+                if url != '':
+                    urls.append(url)
+        else:
+            if line != '':
+                urls.append(line.split('/')[-1].strip())
+
+    return urls
 
 
 def get_driver_options(window_size):

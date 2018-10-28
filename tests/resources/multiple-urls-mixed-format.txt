@@ -1,0 +1,11 @@
+acme.com
+google.com
+amazon.com
+
+https://acme.com
+http://google.com
+/amazon.com
+
+acme.com, google.com, amazon.com
+
+https://acme.com,http://google.com   ,  /amazon.com,
