@@ -1,5 +1,6 @@
-# Blink v1.0 by https://github.com/harleo
+# Blink v1.1 by https://github.com/harleo
 
+# Suppress false flag pylint warning about click
 # pylint: disable=no-value-for-parameter
 
 from selenium import webdriver
@@ -23,6 +24,14 @@ def input_handler(input_file):
     else:
         return input_file + ".txt"
 
+def output_handler(output_folder):
+    if not os.path.exists(output_folder):
+        print("[:] Creating %s folder..." % output_folder)
+        os.makedirs(output_folder)
+        return output_folder
+    else:
+        return output_folder
+
 @click.command(context_settings=dict(help_option_names=["-h", "--help"]))
 @click.option(
     "-i",
@@ -31,6 +40,15 @@ def input_handler(input_file):
     type=str,
     required=True,
     help="name of the input file (must be text file format; urls line by line).",
+)
+@click.option(
+    "-o",
+    "--output",
+    "output_folder",
+    type=str,
+    default="screenshots",
+    show_default=True,
+    help="name of the folder to save the screenshots to.",
 )
 @click.option(
     "-ws",
@@ -51,7 +69,9 @@ def input_handler(input_file):
     help="webpage request timeout in seconds.",
 )
 @check_ssl
-def main(input_file, window_size, time_out):
+def main(input_file, output_folder, window_size, time_out):
+    output_location = output_handler(output_folder)
+
     options = webdriver.ChromeOptions()
     options.add_argument("headless")
     options.add_argument("window-size=%s" % window_size)
@@ -63,7 +83,8 @@ def main(input_file, window_size, time_out):
 
     print("[:] Processing %s URL(s)" % (page_amount))
 
-    driver = webdriver.Chrome(chrome_options=options)
+    # DeprecationWarning: use options instead of chrome_options driver = webdriver.Chrome(chrome_options=options)
+    driver = webdriver.Chrome(options=options)
     driver.set_page_load_timeout(time_out)
 
     for url in url_list:
@@ -71,7 +92,7 @@ def main(input_file, window_size, time_out):
             page_counter += 1
             print("[%d/%d] Opening %s" % (page_counter, page_amount, url))
             driver.get("https://" + url)
-            driver.get_screenshot_as_file("screenshots/" + url + ".png")
+            driver.save_screenshot(output_location + "/" + url + ".png")
         except:
             print("[!] Couldn't save %s, skipping..." % (url))
 

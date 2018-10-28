@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 selenium = "==2.53.6"
 click = "==7.0"
+chromedriver = "*"
 
 [dev-packages]
 
