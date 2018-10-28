@@ -31,7 +31,7 @@ def input_handler(input_file):
 
 def output_handler(output_folder):
     if not os.path.exists(output_folder):
-        print("[:] Creating %s folder..." % output_folder)
+        print(f"[:] Creating {output_folder} folder...")
         os.makedirs(output_folder)
         return output_folder
     else:
@@ -87,7 +87,7 @@ def main(input_file, output_folder, window_size, time_out):
     page_amount = len(url_list)
     page_counter = 0
 
-    print("[:] Processing %s URL(s)" % (page_amount))
+    print(f"[:] Processing {page_amount} URL(s)")
 
     # DeprecationWarning: use options instead of chrome_options driver = webdriver.Chrome(chrome_options=options)
     driver = webdriver.Chrome(options=options)
@@ -96,18 +96,18 @@ def main(input_file, output_folder, window_size, time_out):
     for url in url_list:
         try:
             page_counter += 1
-            print("[%d/%d] Opening %s" % (page_counter, page_amount, url))
+            print(f"[{page_counter}/{page_amount}] Opening {url}")
             driver.get("https://" + url)
             driver.save_screenshot(output_location + "/" + url + ".png")
 
         except WebDriverException as wde:
-            print("[!] Error retrieving web page '%s'. Exception:\n%s" % (url, wde))
+            print(f"[!] Error retrieving web page '{url}'. Exception:\n{wde}")
 
         except IOError:
-            print("[!] Couldn't save %s, skipping..." % (url))
+            print(f"[!] Couldn't save {url}, skipping...")
 
     driver.quit()
-    print("[:] Done processing %s" % input_handler(input_file))
+    print(f"[:] Done processing {input_file}")
 
 
 if __name__ == "__main__":
