@@ -23,6 +23,14 @@ def check_ssl(func):
 
 
 def input_handler(input_file):
+    if not os.path.isfile(input_file) and not os.path.isfile(input_file + ".txt"):
+        print(f"[!] Supplied input file {input_file} doesn't exsist, exiting...")
+        exit()
+    else:
+        return input_ext_handler(input_file)
+
+
+def input_ext_handler(input_file):
     if ".txt" in input_file:
         return input_file
     else:
@@ -65,13 +73,13 @@ def process_urls(url_list, output_location, driver):
     driver.quit()
 
 
-def url_list_from_file(input_file='example.txt'):
+def url_list_from_file(input_file):
     """
     Read the specified file and return all lines inside the file, as a list of lines.
     :param input_file: path to an input file
     :return: list of lines in the file, e.g. URLs separated by new-line
     """
-    return [line.rstrip() for line in open(input_handler(input_file), 'r')]
+    return [line.rstrip() for line in open(input_ext_handler(input_file), 'r')]
 
 
 def get_driver_options(window_size):
@@ -126,11 +134,13 @@ def get_driver_options(window_size):
 def main(input_file, output_folder, window_size, time_out):
     """ Orchestrator for storing screenshots of web pages """
 
+    input_handler(input_file)
+
     output_location = output_handler(output_folder)
 
-    driver_options = get_driver_options(window_size)
-
     url_list = url_list_from_file(input_file)
+
+    driver_options = get_driver_options(window_size)
 
     # DeprecationWarning: use options instead of chrome_options driver = webdriver.Chrome(chrome_options=options)
     driver = webdriver.Chrome(options=driver_options)
@@ -138,8 +148,8 @@ def main(input_file, output_folder, window_size, time_out):
 
     process_urls(url_list, output_location, driver)
 
-    print(f"[:] Done processing {input_handler(input_file)}")
+    print(f"[:] Done processing {input_ext_handler(input_file)}")
 
-    
+
 if __name__ == "__main__":
     main()
