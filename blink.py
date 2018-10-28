@@ -8,6 +8,9 @@ import click
 import ssl
 import os
 
+from selenium.common.exceptions import WebDriverException
+
+
 def check_ssl(func):
     def wrap(*args, **kwargs):
         if not os.environ.get("PYTHONHTTPSVERIFY", "") and getattr(
@@ -18,19 +21,22 @@ def check_ssl(func):
 
     return wrap
 
+
 def input_handler(input_file):
     if ".txt" in input_file:
         return input_file
     else:
         return input_file + ".txt"
 
+
 def output_handler(output_folder):
     if not os.path.exists(output_folder):
-        print("[:] Creating %s folder..." % output_folder)
+        print(f"[:] Creating {output_folder} folder...")
         os.makedirs(output_folder)
         return output_folder
     else:
         return output_folder
+
 
 @click.command(context_settings=dict(help_option_names=["-h", "--help"]))
 @click.option(
@@ -81,7 +87,7 @@ def main(input_file, output_folder, window_size, time_out):
     page_amount = len(url_list)
     page_counter = 0
 
-    print("[:] Processing %s URL(s)" % (page_amount))
+    print(f"[:] Processing {page_amount} URL(s)")
 
     # DeprecationWarning: use options instead of chrome_options driver = webdriver.Chrome(chrome_options=options)
     driver = webdriver.Chrome(options=options)
@@ -90,14 +96,19 @@ def main(input_file, output_folder, window_size, time_out):
     for url in url_list:
         try:
             page_counter += 1
-            print("[%d/%d] Opening %s" % (page_counter, page_amount, url))
+            print(f"[{page_counter}/{page_amount}] Opening {url}")
             driver.get("https://" + url)
             driver.save_screenshot(output_location + "/" + url + ".png")
-        except:
-            print("[!] Couldn't save %s, skipping..." % (url))
+
+        except WebDriverException as wde:
+            print(f"[!] Error retrieving web page '{url}'. Exception:\n{wde}")
+
+        except IOError:
+            print(f"[!] Couldn't save {url}, skipping...")
 
     driver.quit()
-    print("[:] Done processing %s" % input_handler(input_file))
+    print(f"[:] Done processing {input_file}")
+
 
 if __name__ == "__main__":
     main()
