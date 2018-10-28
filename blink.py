@@ -1,4 +1,4 @@
-# Blink v1.1 by https://github.com/harleo
+# Blink v1.2 by https://github.com/harleo
 
 # Suppress false flag pylint warning about click
 # pylint: disable=no-value-for-parameter
@@ -73,7 +73,7 @@ def process_urls(url_list, output_location, driver):
     driver.quit()
 
 
-def url_list_from_file(input_file='example.txt'):
+def url_list_from_file(input_file):
     """
     Read the specified file and return all lines inside the file, as a list of lines.
     :param input_file: path to an input file

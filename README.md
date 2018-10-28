@@ -1,6 +1,6 @@
 ## Blink
 
-Blink is a simple single or bulk webpage screenshotting tool, often used for reconnaissance/archival (OSINT) purposes.
+Blink is a simple single or bulk web page screenshotting tool, often used for reconnaissance/archival (OSINT) purposes.
 
 ### Requirements
 
@@ -19,7 +19,7 @@ Options:
   -o, --output TEXT       name of the folder to save the screenshots to.
                           [default: screenshots]
   -ws, --windowsize TEXT  window size of the screenshot.  [default: 1200x600]
-  -to, --timeout INTEGER  webpage request timeout in seconds.  [default: 10]
+  -to, --timeout INTEGER  web page request timeout in seconds.  [default: 10]
   -h, --help              Show this message and exit.
 ```
 
@@ -36,12 +36,22 @@ python3 blink.py -i example -o example -ws 1920x1080 -to 5
 
 ### Format
 
-Text file format:
+Input file parsing supports both separation by new-line, comma, a mix of these and either HTTP, HTTPS, or an invalid variation of these, e.g. 'ttp://' or simply '/'
+
+Example:
 
 ```txt
 acme.com
 google.com
-yahoo.com
+amazon.com
+
+https://acme.com
+http://google.com
+/amazon.com
+
+acme.com, google.com, amazon.com
+
+https://acme.com,http://google.com   ,  /amazon.com,
 ```
 
 ---
