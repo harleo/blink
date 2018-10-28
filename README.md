@@ -16,6 +16,8 @@ Usage: blink.py [OPTIONS]
 Options:
   -i, --input TEXT        name of the input file (must be text file format;
                           urls line by line).  [required]
+  -o, --output TEXT       name of the folder to save the screenshots to.
+                          [default: screenshots]
   -ws, --windowsize TEXT  window size of the screenshot.  [default: 1200x600]
   -to, --timeout INTEGER  webpage request timeout in seconds.  [default: 10]
   -h, --help              Show this message and exit.
@@ -24,8 +26,9 @@ Options:
 ### Example
 
 ```console
-python3 blink.py -i example -ws 1920x1080 -to 5
+python3 blink.py -i example -o example -ws 1920x1080 -to 5
 
+[:] Creating example folder...
 [:] Processing 1 URL(s)
 [1/1] Opening acme.com
 [:] Done processing example.txt
