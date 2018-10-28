@@ -8,6 +8,9 @@ import click
 import ssl
 import os
 
+from selenium.common.exceptions import WebDriverException
+
+
 def check_ssl(func):
     def wrap(*args, **kwargs):
         if not os.environ.get("PYTHONHTTPSVERIFY", "") and getattr(
@@ -18,11 +21,13 @@ def check_ssl(func):
 
     return wrap
 
+
 def input_handler(input_file):
     if ".txt" in input_file:
         return input_file
     else:
         return input_file + ".txt"
+
 
 def output_handler(output_folder):
     if not os.path.exists(output_folder):
@@ -31,6 +36,7 @@ def output_handler(output_folder):
         return output_folder
     else:
         return output_folder
+
 
 @click.command(context_settings=dict(help_option_names=["-h", "--help"]))
 @click.option(
@@ -93,11 +99,16 @@ def main(input_file, output_folder, window_size, time_out):
             print("[%d/%d] Opening %s" % (page_counter, page_amount, url))
             driver.get("https://" + url)
             driver.save_screenshot(output_location + "/" + url + ".png")
-        except:
+
+        except WebDriverException as wde:
+            print("[!] Error retrieving web page '%s'. Exception:\n%s" % (url, wde))
+
+        except IOError:
             print("[!] Couldn't save %s, skipping..." % (url))
 
     driver.quit()
     print("[:] Done processing %s" % input_handler(input_file))
+
 
 if __name__ == "__main__":
     main()
