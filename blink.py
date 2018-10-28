@@ -74,8 +74,26 @@ def output_handler(output_folder):
     show_default=True,
     help="web page request timeout in seconds.",
 )
+@click.option(
+    "-f",
+    "--format",
+    "file_format",
+    type=str,
+    default="png",
+    show_default=True,
+    help="output file format.",
+)
+@click.option(
+    "-f",
+    "--format",
+    "file_format",
+    default="png",
+    show_default=True,
+    type=click.Choice(["png", "jpg"]),
+    help="set output file format: 'png' or 'jpg'."
+)
 @check_ssl
-def main(input_file, output_folder, window_size, time_out):
+def main(input_file, output_folder, window_size, time_out, file_format):
     """ Orchestrator for storing screenshots of web pages """
 
     output_location = output_handler(output_folder)
@@ -108,8 +126,8 @@ def process_urls(url_list, output_location, driver):
         print(f"[{page_counter}/{len(url_list)}] Opening {url}")
 
         try:
-            driver.get("https://" + url)
-            driver.save_screenshot(output_location + "/" + url + ".png")
+            driver.get("http://" + url)
+            driver.save_screenshot(output_location + "/" + url + "." + file_format)
 
         except WebDriverException as wde:
             print(f"[!] Error retrieving web page '{url}'. Exception:\n{wde}")
